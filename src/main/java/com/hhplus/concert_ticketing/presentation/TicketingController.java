@@ -2,6 +2,7 @@ package com.hhplus.concert_ticketing.presentation;
 
 import com.hhplus.concert_ticketing.presentation.dto.request.BalanceRequest;
 import com.hhplus.concert_ticketing.presentation.dto.request.PaymentRequest;
+import com.hhplus.concert_ticketing.presentation.dto.request.ReservationRequest;
 import com.hhplus.concert_ticketing.presentation.dto.response.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -22,15 +23,12 @@ public class TicketingController {
     public ResponseEntity<TokenResponse> generateToken(@RequestParam String userId) {
         String token = "This_is_Token_mocked_token_for_" + userId; // 임시토큰형식
         TokenStatus status = TokenStatus.ACTIVE;
-        LocalDateTime createdAt = LocalDateTime.now();
-        LocalDateTime expiresAt = createdAt.plusHours(1); // 만료시간이 1시간
+        LocalDateTime expiresAt = LocalDateTime.now().plusMinutes(5); // 만료시간이 1시간
 
         TokenResponse response = TokenResponse.builder()
-                .user_id(userId)
                 .token(token)
-                .status(status)
-                .created_at(createdAt)
-                .expires_at(expiresAt)
+                .queuePosition(11L)
+                .expired_at(expiresAt)
                 .build();
 
         return ResponseEntity.ok(response);
@@ -39,35 +37,46 @@ public class TicketingController {
 
     // 예약 가능 날짜 조회
     // http://localhost:8080/api/concert/1/available-dates
-    @GetMapping("/api/concert/{concertOptionId}/available-dates")
-    public ResponseEntity<List<String>> getAvailableDates(@PathVariable String concertOptionId) {
-        log.info("you entered concertOptionId :: " + concertOptionId);
-        List<String> dates = new ArrayList<>();
-        dates.add("2024-07-10");
-        dates.add("2024-07-11");
-        dates.add("2024-07-12");
-        dates.add("2024-07-13");
-        dates.add("2024-07-14");
+    @GetMapping("/api/concert/{concertId}/available-dates")
+    public ResponseEntity<List<ConcertDateResponse>> getAvailableDates(
+            @PathVariable Long concertId,
+            @RequestParam String token
+    ) {
+        log.info("you entered concertOptionId :: " + concertId);
+        List<ConcertDateResponse> dummyDataList = new ArrayList<>();
+        // for 문을 이용해 더미 데이터 생성
+        for (int i = 1; i <= 10; i++) {
+            ConcertDateResponse dummyData = ConcertDateResponse.builder()
+                    .concertOptionId((long)i)
+                    .concertDate("2024-07-" + String.format("%02d", i))
+                    .build();
+            dummyDataList.add(dummyData);
+        }
 
-        return ResponseEntity.ok(dates);
+        return ResponseEntity.ok(dummyDataList);
     }
 
 
     // 예약 가능 좌석 조회
     // /api/concert/1/available-seats?date=2024-07-05
     @GetMapping("/api/concert/{concertOptionId}/available-seats")
-    public ResponseEntity<List<String>> getAvailableSeats(
-            @PathVariable String concertOptionId,
-            @RequestParam String date
+    public ResponseEntity<List<SeatResponse>> getAvailableSeats(
+            @RequestParam String token,
+            @PathVariable Long concertOptionId
     ) {
         log.info("you entered concertOptionId :: " + concertOptionId);
-        log.info("you entered date :: " + date);
-        List<String> seats = new ArrayList<>();
-        seats.add("A1");
-        seats.add("A2");
-        seats.add("A3");
+        List<SeatResponse> seatResponses = new ArrayList<>();
 
-        return ResponseEntity.ok(seats);
+        for (int i = 1; i <= 10; i++) {
+            SeatResponse seatResponse = new SeatResponse(
+                    (long) i,
+                    "Seat " + i,
+                    SeatStatus.AVAILABLE
+            );
+            seatResponses.add(seatResponse);
+        }
+
+        return ResponseEntity.ok(seatResponses);
     }
 
 
@@ -85,10 +94,7 @@ public class TicketingController {
     public ResponseEntity<ReservationResponse> reserveSeat(
             @RequestBody ReservationRequest request) {
         ReservationResponse response = ReservationResponse.builder()
-                .userId(request.getUserId())
-                .seatId(request.getSeatId())
-                .status(request.getStatus())
-                .createdAt(LocalDateTime.now())
+                .reservationId(1L)
                 .build();
 
         return ResponseEntity.ok(response);
@@ -98,17 +104,13 @@ public class TicketingController {
     // 잔액 충전
     /*
     * http://localhost:8080/api/balance/charge
-    * {
-        "userId": 12345,
-        "chargeBalance": 100000
-      }
+
     * */
     @PatchMapping("/api/balance/charge")
     public ResponseEntity<BalanceResponse> chargeBalance(@RequestBody BalanceRequest request) {
 
         return ResponseEntity.ok(BalanceResponse.builder()
-                .userId(request.getUserId())
-                .totalBalance(request.getChargeBalance()+1000)
+                .totalBalance(request.getAmount()+1000)
                 .build());
     }
 
@@ -117,25 +119,16 @@ public class TicketingController {
     @GetMapping("/api/balance")
     public ResponseEntity<BalanceResponse> getBalance(@RequestParam Long userId) {
         return ResponseEntity.ok(BalanceResponse.builder()
-                .userId(userId)
                 .totalBalance(10000L)
                 .build());
     }//getBalance
 
     // 결제 API
-    /*
-    * http://localhost:8080/api/pay
-    * {
-        "reservation_id" : 1,
-        "amount" : 10000
-      }
-    * */
     @PostMapping("/api/pay")
-    public ResponseEntity<PaymentResponse> processPayment(@RequestBody PaymentRequest request) {
+    public ResponseEntity<PaymentResponse> processPayment(
+            @RequestBody PaymentRequest request) {
         return ResponseEntity.ok(PaymentResponse.builder()
-                .reservation_id(request.getReservation_id())
-                .amount(request.getAmount())
-                .paymentDate(LocalDateTime.now())
+                .paymentId(1L)
                 .build());
     }//processPayment
 

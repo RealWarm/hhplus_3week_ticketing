@@ -6,5 +6,5 @@ import lombok.Getter;
 @Getter
 public class BalanceRequest {
     Long userId;
-    Long chargeBalance;
+    Long amount;
 }

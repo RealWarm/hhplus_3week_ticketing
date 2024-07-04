@@ -9,19 +9,10 @@ import java.time.LocalDateTime;
 @Getter
 public class ReservationResponse {
 
-    Long userId;
-    Long seatId;
-    ReservationStatus status;
-    LocalDateTime createdAt;
+    Long reservationId;
 
     @Builder
-    public ReservationResponse(Long userId, Long seatId,
-                               ReservationStatus status,
-                               LocalDateTime createdAt) {
-        this.userId = userId;
-        this.seatId = seatId;
-        this.status = status;
-        this.createdAt = createdAt;
-    }//init
-
+    public ReservationResponse(Long reservationId) {
+        this.reservationId = reservationId;
+    }
 }//end
