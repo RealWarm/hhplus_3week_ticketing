@@ -1,5 +1,6 @@
 package com.hhplus.concert_ticketing.presentation.dto.response;
 
+import com.hhplus.concert_ticketing.domain.concert.SeatStatus;
 import lombok.Getter;
 
 @Getter

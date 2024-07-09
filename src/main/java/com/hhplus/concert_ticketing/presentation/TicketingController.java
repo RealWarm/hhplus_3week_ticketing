@@ -1,5 +1,7 @@
 package com.hhplus.concert_ticketing.presentation;
 
+import com.hhplus.concert_ticketing.domain.Token.TokenStatus;
+import com.hhplus.concert_ticketing.domain.concert.SeatStatus;
 import com.hhplus.concert_ticketing.presentation.dto.request.BalanceRequest;
 import com.hhplus.concert_ticketing.presentation.dto.request.PaymentRequest;
 import com.hhplus.concert_ticketing.presentation.dto.request.ReservationRequest;
@@ -22,7 +24,7 @@ public class TicketingController {
     @PostMapping("/api/token")
     public ResponseEntity<TokenResponse> generateToken(@RequestParam String userId) {
         String token = "This_is_Token_mocked_token_for_" + userId; // 임시토큰형식
-        TokenStatus status = TokenStatus.ACTIVE;
+        TokenStatus status = TokenStatus.ACTIVATE;
         LocalDateTime expiresAt = LocalDateTime.now().plusMinutes(5); // 만료시간이 1시간
 
         TokenResponse response = TokenResponse.builder()
