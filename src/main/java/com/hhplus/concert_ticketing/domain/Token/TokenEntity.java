@@ -48,4 +48,7 @@ public class TokenEntity {
         this.expiredAt = LocalDateTime.now();
     }//init
 
+    public void changeStatus(TokenStatus status){
+        this.status=status;
+    }
 }//end

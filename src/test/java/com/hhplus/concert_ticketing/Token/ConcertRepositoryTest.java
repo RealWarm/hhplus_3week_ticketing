@@ -31,9 +31,8 @@ public class ConcertRepositoryTest {
     @BeforeEach
     void setUp() {
         ConcertEntity concert = new ConcertEntity(1L, "미녀와 야수");
-        ConcertEntity concert2 = new ConcertEntity(2L, "미녀와 야수2");
         ConcertEntity result = concertRepository.save(concert);
-        /////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////////
         ConcertOptionEntity concertOption = new ConcertOptionEntity(1L, concert,
                 LocalDateTime.now(),
                 130000L
@@ -43,15 +42,16 @@ public class ConcertRepositoryTest {
                 120000L
         );
         ConcertOptionEntity resultOption = concertOptionRepository.save(concertOption);
-//        ConcertOptionEntity resultOption2 = concertOptionRepository.save(concertOption1);
+        ConcertOptionEntity resultOption2 = concertOptionRepository.save(concertOption1);
         /////////////////////////////////////////
         int seatNum = 50;
-        List<SeatEntity> seats = new ArrayList<>();
+
         for (long i = 1; i <= seatNum; i++) {
-            SeatEntity seat = new SeatEntity(i, concertOption, String.valueOf(i),
-                i%2==0 ? SeatStatus.AVAILABLE : SeatStatus.RESERVED
-            );
-            seats.add(seat);
+            StringBuilder sb = new StringBuilder();
+            SeatEntity seat = new SeatEntity(i, concertOption,
+                    sb.append(concertOption.getId().toString()).append("-").append(String.valueOf(i)).toString(),
+                i%2==0 ? SeatStatus.AVAILABLE : SeatStatus.RESERVED);
+            System.out.println("@@@@@@@@@@ " + seat.getSeatNumber());
             seatRepository.save(seat);
         }//for-i
     }//SETUP
@@ -69,7 +69,7 @@ public class ConcertRepositoryTest {
     void 콘서트옵션ID와_좌석번호로_좌석조회(){
         // findByConcertOption_IdAndSeatNumber
         Optional<SeatEntity> seat
-                = seatRepository.findByConcertOption_IdAndSeatNumber(1L, "3");
+                = seatRepository.findByConcertOption_IdAndSeatNumber(3L, "1-3");
         System.out.println("##### " + seat.get().getSeatNumber());
     }
 
@@ -82,9 +82,6 @@ public class ConcertRepositoryTest {
                     + options.get(i).getConcert().getName());
         }//for-i
     }
-
-
-
 
 
 }//END

@@ -6,6 +6,7 @@ import com.hhplus.concert_ticketing.domain.Token.TokenStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -25,6 +26,11 @@ public class TokenRepositoryImpl implements TokenRepository {
     }
 
     @Override
+    public Optional<TokenEntity> findByCustomer_Id(Long customerId) {
+        return tokenJpaRepository.findByCustomer_Id(customerId);
+    }
+
+    @Override
     public Optional<TokenEntity> findByIdAndCustomer_Id(Long tokenId, Long customerId) {
          return tokenJpaRepository.findByIdAndCustomer_Id(tokenId, customerId);
         //return null;
@@ -33,6 +39,11 @@ public class TokenRepositoryImpl implements TokenRepository {
     @Override
     public Long countByIdLessThanAndStatus(Long id, TokenStatus status) {
         return tokenJpaRepository.countByIdLessThanAndStatus(id, status);
+    }
+
+    @Override
+    public List<TokenEntity> findByStatus(TokenStatus status) {
+        return tokenJpaRepository.findByStatus(status);
     }
 
 }

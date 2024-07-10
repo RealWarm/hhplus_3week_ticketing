@@ -76,7 +76,7 @@ public class TokenRepositoryTest {
 
     @Test
     void 토큰대기열번호_조회() {
-        Long queuPosition = tokenRepository.countByIdLessThanAndStatus(50L, TokenStatus.WAITING);
+        Long queuPosition = tokenRepository.countByIdLessThanAndStatus(40L, TokenStatus.WAITING);
         System.out.println("@@@@@@@@@@@ " + queuPosition);
     }
 

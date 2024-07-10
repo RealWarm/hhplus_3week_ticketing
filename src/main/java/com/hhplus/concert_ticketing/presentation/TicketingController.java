@@ -28,7 +28,8 @@ public class TicketingController {
         LocalDateTime expiresAt = LocalDateTime.now().plusMinutes(5); // 만료시간이 1시간
 
         TokenResponse response = TokenResponse.builder()
-                .token(token)
+                .tokenValue(token)
+                .tokenStatus(status)
                 .queuePosition(11L)
                 .expired_at(expiresAt)
                 .build();

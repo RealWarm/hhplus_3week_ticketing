@@ -9,6 +9,7 @@ import lombok.*;
 @Entity
 @Table(name="customer")
 @Builder
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CustomerEntity {
@@ -24,8 +25,12 @@ public class CustomerEntity {
     @Column(nullable = false, name="point")
     private Long point;
 
-    public void updatePoint(Long point){
+    public Long chargePoint(Long point){
+        if(point<=0){
+            throw new RuntimeException("포인트는 0원보다 커야합니다");
+        }
         this.point+=point;
+        return this.point;
     }//
 
 }//end

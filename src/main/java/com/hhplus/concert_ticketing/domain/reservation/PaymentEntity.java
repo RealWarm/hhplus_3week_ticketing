@@ -22,7 +22,7 @@ public class PaymentEntity {
     @JoinColumn(name = "reservation_id")
     private ReservationEntity reservation;
 
-    private Double amount;
+    private Long amount;
 
     private LocalDateTime payment_date;
 

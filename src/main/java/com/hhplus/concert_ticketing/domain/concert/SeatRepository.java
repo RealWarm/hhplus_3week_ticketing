@@ -6,7 +6,7 @@ import java.util.Optional;
 
 public interface SeatRepository {
 
-    // 콘서트옵션별 좌석 저장
+    // 콘서트 옵션별 좌석 저장
     SeatEntity save(SeatEntity seat);
 
     // 옵션ID로 모든 좌석 조회
